@@ -1,5 +1,6 @@
 ﻿# -*- coding: utf-8 -*- 
 import re
+import random
 
 class Stack:
 	def __init__(self):
@@ -183,6 +184,59 @@ class Entities:
 				print " From: %s" % d.e_from.id
 				print " To: %s" % d.e_to.id
 				print " Title: %s" % d.title
+
+class ComponentTextRuGen:
+	def __init__(self, diagramm):
+		self.dia = diagramm
+		self.Name = u"Проект"
+		self.name = u"проект"
+	def rand(self, percent):
+		r = random.randint(1, 100)
+		return r<=percent
+	def t_use(self):
+		r = random.randint(1, 2)
+		if r == 1:
+			return u"использует"
+		elif r == 2:
+			return u"применяет"
+			
+
+	def text_interface(self):
+		entries = self.dia.s
+		count = 0
+		a = []
+		for i in entries:
+			if i.type == 2:
+				count += 1
+				a.append(i)
+		print a
+		if count == 0:
+			r = random.randint(1, 2)
+			if r == 1:
+				print self.Name + "не "+self.t_use()+" интерфейсы"
+		elif count == 1:
+			r = random.randint(1, 2)
+			if r == 1:
+				print self.Name + u" "+self.t_use()+u" интерфейс "+str(a[0].name)
+
+			else:
+				print self.Name + u" "+self.t_use()+" "+str(a[0].name)
+		elif count <4:
+			r = random.randint(1, 2)
+			if r == 1:
+				print u"Проект использует интерфейс %s" % (a[0].name)
+			else:
+				print u"Проект использует интерфейс %s" % (a[0].name)
+
+			if self.rand(50):
+				print u"В проекте %d интерфейсов" % (count)
+
+
+	def generate(self):
+		print "Generate:"
+		self.text_interface()
+
+
 
 class ComponentDiagramParser:
 	def __init__(self):
@@ -390,7 +444,10 @@ class ComponentDiagramParser:
 				print "STOP"
 				self.es.pop_group()
 				
-print u'Привет'
 parser = ComponentDiagramParser()
 parser.parse("3.txt")
+gen = ComponentTextRuGen(parser.es)
 parser.es.debug_print()
+
+gen.generate()
+

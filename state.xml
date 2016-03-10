@@ -1,0 +1,15 @@
+<root>
+	<entity id="state1">
+		<name>Стадия 1</name>
+		<description>this is a string</description>
+		<description>this is another string</description>
+		<to direction="1">state2</to>
+		<to>END</to>
+		<from>START</from>
+	</entity>
+	<entity id="state2">
+		<name>State 2</name>
+		<to>END</to>
+	</entity>
+
+</root>
