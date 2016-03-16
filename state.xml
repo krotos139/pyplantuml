@@ -1,15 +1,422 @@
 <root>
-	<entity id="state1">
-		<name>Стадия 1</name>
-		<description>this is a string</description>
-		<description>this is another string</description>
-		<to direction="1">state2</to>
-		<to>END</to>
+	<!-- Необходимо добавить менеджера к каждой задаче  -->
+	<entity id="tz">
+		<name>Разработка ТЗ</name>
+		<description>Разработать техническое задание согласно ЕСКД, согласовать с заказчиком</description>
+		<result>Документ - Техническое задание</result>
+		<people>Яковлев Ю.В.</people>
+		<starttime>15.01.16</starttime>
+		<endtime>15.03.16</endtime>
+		<history date="15.03.16">Выполнено</history>
+		<description>Потребуется командировка для согласования некоторых вопросов</description>
 		<from>START</from>
 	</entity>
-	<entity id="state2">
-		<name>State 2</name>
+	<entity id="end">
+		<name>Подготовка комплекта документации и электронных носителей, передача проекта заказчику</name>
+		<description>Выполнить комплекс работ для передачи проекта заказчику</description>
+		<result>Акт выполненных работ</result>
+		<people>Яковлев Ю.В.</people>
+		<starttime>30.05.17</starttime>
+		<endtime>30.05.17</endtime>
+		<from>do178_end</from>
+		<from>espd</from>
 		<to>END</to>
 	</entity>
+
+<!-- Оформление документации DO-178 -->
+	<entity id="do178_plan">
+		<name>Разработка входных данных сертификационных документов этапа планирования</name>
+		<description>Выполнить комплекс работ по подготовке к разраотке ПО, согласно этапу планирование DO-178</description>
+		<result>Данные - План сертификации ПО</result>
+		<result>Данные - План разработки ПО</result>
+		<result>Данные - План верификации ПО</result>
+		<result>Данные - План управления конфигурацией ПО</result>
+		<result>Данные - План гарантии качества ПО</result>
+		<people>Яковлев Ю.В.</people>
+		<people>Куликов Н.В.</people>
+		<starttime>15.03.16</starttime>
+		<endtime>15.04.16</endtime>
+		<from direction="1">tz</from>
+	</entity>
+
+	<entity id="do178_develop">
+		<name>Разработка входных данных сертификационных документов этапа разработки ПО</name>
+		<description>Выполнить комплекс работ по подготовке к разраотке ПО, согласно этапу планирование DO-178</description>
+		<result>Данные - Требования к ПО</result>
+		<result>Данные - Архитектура ПО</result>
+		<people>Яковлев Ю.В.</people>
+		<people>Куликов Н.В.</people>
+		<starttime>15.04.16</starttime>
+		<endtime>15.05.16</endtime>
+		<from>do178_plan</from>
+	</entity>
+
+	<entity id="do178_verify">
+		<name>Разработка входных данных сертификационных документов этапа верификации ПО</name>
+		<description>Выполнить комплекс работ по подготовке к разраотке ПО, согласно этапу планирование DO-178</description>
+		<result>Данные - Примеры и процедуры верификации ПО</result>
+		<result>Данные - Результаты верификации ПО</result>
+		<result>Данные - </result>
+		<description>Так как процесс разработки использует TDD, следует только оформить тесты и задокументировать</description>
+		<people>Яковлев Ю.В.</people>
+		<people>Куликов Н.В.</people>
+		<starttime>15.01.16</starttime>
+		<endtime>15.02.17</endtime>
+		<from>do178_develop</from>
+		<from>sw_test</from>
+	</entity>
+
+	<entity id="do178_config">
+		<name>Разработка входных данных сертификационных документов этапа управления конфигурации ПО</name>
+		<description>Выполнить комплекс работ по подготовке к разраотке ПО, согласно этапу планирование DO-178</description>
+		<result>Данные - Каталог среды жызненного цикла ПО</result>
+		<result>Данные - Каталог комплектации ПО</result>
+		<result>Данные - Сообщения о проблемах</result>
+		<people>Яковлев Ю.В.</people>
+		<people>Куликов Н.В.</people>
+		<starttime>15.02.17</starttime>
+		<endtime>01.03.17</endtime>
+		<from>do178_verify</from>
+	</entity>
+
+	<entity id="do178_quality">
+		<name>Разработка входных данных сертификационных документов этапа гарантии качества ПО</name>
+		<description>Выполнить комплекс работ по подготовке к разраотке ПО, согласно этапу планирование DO-178</description>
+		<result>Данные - Итоговое заключение о ПО</result>
+		<result>Проверка всех входных данных по жизненному циклу DO-178</result>
+		<people>Яковлев Ю.В.</people>
+		<people>Куликов Н.В.</people>
+		<starttime>01.03.17</starttime>
+		<endtime>15.03.17</endtime>
+		<from>do178_config</from>
+	</entity>
+
+	<entity id="do178_tool">
+		<name>Доработка системы автоматизированной подготовки документации КТ-178</name>
+		<description>Выполнить доработку системы автоматической подготовки документации для работой с данными проекта Брандмауэра</description>
+		<result></result>
+		<result>Проверка всех входных данных по жизненному циклу DO-178</result>
+		<people>Яковлев Ю.В.</people>
+		<starttime>15.03.16</starttime>
+		<endtime>01.03.17</endtime>
+	</entity>
+
+
+	<entity id="do178_end">
+		<name>Оформление полного комплекта сертификационных документов КТ-178</name>
+		<description>Выполнить комплекс работ по подготовке к разраотке ПО, согласно этапу планирование DO-178</description>
+		<result>Документ - План сертификации ПО</result>
+		<result>Документ - План разработки ПО</result>
+		<result>Документ - План верификации ПО</result>
+		<result>Документ - План управления конфигурацией ПО</result>
+		<result>Документ - План гарантии качества ПО</result>
+		<result>Документ - Требования к ПО</result>
+		<result>Документ - Описание проекта ПО</result>
+		<result>Документ - Исходный код</result>
+		<result>Документ - Исполняемый объектный код</result>
+		<result>Документ - Примеры и процедуры верификации ПО</result>
+		<result>Документ - Результаты верификации ПО</result>
+		<result>Документ - Каталог среды жизненного цикла ПО</result>
+		<result>Документ - Каталог комплектации ПО</result>
+		<result>Документ - Сообщения об ошибках</result>
+		<result>Документ - Протоколы УКПО</result>
+		<result>Документ - Протоколы ГКПО</result>
+		<result>Документ - Итоговое заключение о ПО</result>
+		<people>Яковлев Ю.В.</people>
+		<starttime>01.03.17</starttime>
+		<endtime>30.05.17</endtime>
+		<description>Настройка системы автоматического синтеза пакета сертификационной документации, отладка системы и подготовка комплекта документации</description>
+		<from>do178_tool</from>
+		<from>do178_plan</from>
+		<from>do178_develop</from>
+		<from>do178_verify</from>
+		<from>do178_config</from>
+		<from>do178_quality</from>
+		<from>sw_test</from>
+	</entity>
+<!-- Оформление документации ЕСПД -->
+	<entity id="espd">
+		<name>Разработка комплекта документации ЕСПД</name>
+		<description>Разработать комплект документации по требованиям ЕСПД</description>
+		<result>Данные - ЕСПД Спецификация</result>
+		<result>Данные - ЕСПД Исходный код</result>
+		<result>Данные - ЕСПД Протокол взаимодействия</result>
+		<people>Яковлев Ю.В.</people>
+		<starttime>15.05.17</starttime>
+		<endtime>30.05.17</endtime>
+		<from direction="1">sw_test</from>
+	</entity>
+
+
+<!-- Научно исследовательские работы -->
+	<entity id="nir_learn_protocol">
+		<name>Изучение протоколов взаимодействия со стороннем оборудованием</name>
+		<description>Запрос необходимой документации и ее изучение</description>
+		<result>Знания</result>
+		<people>Яковлев Ю.В.</people>
+		<people>Куликов Н.В.</people>
+		<people>Моторжин А.В.</people>
+		<starttime>15.03.16</starttime>
+		<endtime>15.05.16</endtime>
+		<from>tz</from>
+		<to>do178_develop</to>
+	</entity>
+	<entity id="nir_learn_documents">
+		<name>Изучение стандартов необходимых при разработке ПО</name>
+		<description>Следует изучить: 429P3-19, 664P7-1, 615-4 ER2, 615A-3, 661-5, DO-326A</description>
+		<result>Знания</result>
+		<people>Яковлев Ю.В.</people>
+		<people>Куликов Н.В.</people>
+		<people>Моторжин А.В.</people>
+		<starttime>15.04.16</starttime>
+		<endtime>15.05.16</endtime>
+		<from>nir_learn_protocol</from>
+		<from>nir_documents_buy</from>
+		<to>do178_develop</to>
+	</entity>
+	<entity id="nir_documents_buy">
+		<name>Приобретение необходимых стандартов и документации</name>
+		<description>Следует приорести: 429P3-19, 664P7-1, 615-4 ER2, 615A-3, 661-5, DO-326A</description>
+		<result>Комплект приобретенных документов в электронном виде</result>
+		<people>Шеина О.Н.</people>
+		<starttime>15.03.16</starttime>
+		<endtime>15.04.16</endtime>
+	</entity>
+	<entity id="nir_pcie">
+		<name>Изучение возможности реализации переедачи данных через PCI Express</name>
+		<description>Изучение документации и реализация работающего прототипа</description>
+		<result>Отчет</result>
+		<people>Моторжин А.В.</people>
+		<starttime>15.03.16</starttime>
+		<endtime>01.05.16</endtime>
+		<to>do178_plan</to>
+		<from>tz</from>
+	</entity>
+	<entity id="nir_cloud">
+		<name>Изучение возможности реализации распределенных вычислений на аппаратуре брандмауэра</name>
+		<description>Изучение документации и реализация работающего прототипа</description>
+		<result>Отчет</result>
+		<people>Моторжин А.В.</people>
+		<starttime>15.03.16</starttime>
+		<endtime>01.05.16</endtime>
+		<to>do178_plan</to>
+		<from>nir_pcie</from>
+	</entity>
+
+<!-- Разработка ПО -->
+	<entity id="sw_develop">
+		<name>Начало разработки исходного кода ПО</name>
+		<description>Поставновка задач всем исполнителям</description>
+		<result>План работ для всех программистов, учавствующих в разработке ПО</result>
+		<people>Куликов Н.В.</people>
+		<starttime>15.05.16</starttime>
+		<endtime>25.05.16</endtime>
+		<from direction="1">do178_develop</from>
+	</entity>
+	<entity id="sw_test">
+		<name>Тестирование исходного кода ПО</name>
+		<description>Проведение тестирования всего ПО</description>
+		<result>Исходный код</result>
+		<people>Куликов Н.В.</people>
+		<starttime>01.11.16</starttime>
+		<endtime>15.11.16</endtime>
+		<from>sw_spo</from>
+		<from>sw_fpo</from>
+	</entity>
+<!-- Разработка СПО -->
+	<entity id="sw_kernel">
+		<name>Переработка кода u-boot для использования в качестве вычислительного ядра системы брандмауэра</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Куликов Н.В.</people>
+		<starttime>15.05.16</starttime>
+		<endtime>15.06.16</endtime>
+		<from>sw_develop</from>
+	</entity>
+	<entity id="sw_pcie">
+		<name>Разработка компонента передачи данных между двумя вычислителями по PCI Express (при необходимости)</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Моторжин А.В.</people>
+		<starttime>15.03.16</starttime>
+		<endtime>01.05.16</endtime>
+		<from>nir_pcie</from>
+		<from>sw_develop</from>
+	</entity>
+	<entity id="sw_drv_afdx">
+		<name>Разработка компонента поддержки протокола ARINC 664 (AFDX)</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Моторжин А.В.</people>
+		<starttime>15.05.16</starttime>
+		<endtime>01.08.16</endtime>
+		<from>sw_kernel</from>
+	</entity>
+	<entity id="sw_drv_mavim">
+		<name>Портирование компонента поддержки МАВИм на основе готового кода для Linux/VxWorks653</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Бескоровайный С.В.</people>
+		<starttime>15.06.16</starttime>
+		<endtime>15.08.16</endtime>
+		<from>sw_kernel</from>
+	</entity>
+	<entity id="sw_drv_mdim3">
+		<name>Разработка драйвера МДИм3</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Бескоровайный С.В.</people>
+		<starttime>15.06.16</starttime>
+		<endtime>15.08.16</endtime>
+		<from>sw_kernel</from>
+	</entity>
+	<entity id="sw_a615">
+		<name>Разработка компонента реализации протокола ARINC 615</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Моторжин А.В.</people>
+		<starttime>15.06.16</starttime>
+		<endtime>15.08.16</endtime>
+		<from>sw_kernel</from>
+	</entity>
+	<entity id="sw_a615a">
+		<name>Разработка компонента реализации протокола ARINC 615A</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Моторжин А.В.</people>
+		<starttime>15.06.16</starttime>
+		<endtime>15.08.16</endtime>
+		<from>sw_a615</from>
+		<from>sw_drv_afdx</from>
+	</entity>
+	<entity id="sw_timesync">
+		<name>Разработка компонента сонхронизации с общесамотным временем</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Моторжин А.В.</people>
+		<starttime>01.08.16</starttime>
+		<endtime>15.08.16</endtime>
+		<from>sw_kernel</from>
+		<from>sw_drv_afdx</from>
+	</entity>
+	<entity id="sw_spo">
+		<name>Интеграция всех компонентов сервисного ПО в проект,</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Куликов Н.В.</people>
+		<starttime>25.05.16</starttime>
+		<endtime>15.08.16</endtime>
+		<from>sw_timesync</from>
+		<from>sw_a615a</from>
+		<from>sw_a615</from>
+		<from>sw_drv_mdim3</from>
+		<from>sw_kernel</from>
+		<from>sw_pcie</from>
+		<from>sw_drv_afdx</from>
+		<from>sw_drv_mavim</from>
+
+	</entity>
+
+<!-- Разработка ФПО -->
+
+	<entity id="sw_hash_buy">
+		<name>Приобретение ПО для тестирования ЭЦП</name>
+		<description>Требуется приобрести ПО для рассчета хэш функции и создания ЭЦП, необходимое для тестирования и отладки ПО</description>
+		<result>Комплект приобретенного ПО</result>
+		<description>Выбор необходимого ПО возлагается на исполнителя</description>
+		<people>Шеина О.Н.</people>
+		<starttime>15.03.16</starttime>
+		<endtime>15.05.16</endtime>
+	</entity>
+	<entity id="sw_hash">
+		<name>Разработка компонента подсчета хэш-функции по ГОСТ Р 34.11-2012</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Новиков А.В.</people>
+		<starttime>15.05.16</starttime>
+		<endtime>15.06.16</endtime>
+		<from direction="1">sw_hash_buy</from>
+		<from>sw_spo</from>
+	</entity>
+	<entity id="sw_ecp">
+		<name>Разработка компонента проверки ЭЦП по ГОСТ Р 34.10-2012</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Новиков А.В.</people>
+		<starttime>15.06.16</starttime>
+		<endtime>15.08.16</endtime>
+		<from>sw_hash_buy</from>
+		<from>sw_hash</from>
+	</entity>
+
+	<entity id="sw_config">
+		<name>Разработка компонента конфигурации</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Новиков А.В.</people>
+		<starttime>15.05.16</starttime>
+		<endtime>01.11.16</endtime>
+		<from>sw_spo</from>
+		<from>sw_ecp</from>
+	</entity>
+	<entity id="sw_autorisation">
+		<name>Разработка компонента авторизации</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Новиков А.В.</people>
+		<starttime>15.05.16</starttime>
+		<endtime>01.11.16</endtime>
+		<from>sw_spo</from>
+		<from>sw_hash</from>
+	</entity>
+	<entity id="sw_subscription">
+		<name>Разработка компонента подписки</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Моторжин А.В.</people>
+		<starttime>15.05.16</starttime>
+		<endtime>01.11.16</endtime>
+		<from>sw_spo</from>
+		<from>sw_autorisation</from>
+		<from>sw_drv_afdx</from>
+		<from>sw_drv_mavim</from>
+	</entity>
+	<entity id="sw_gateway">
+		<name>Разработка компонента шлюза</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Моторжин А.В.</people>
+		<starttime>15.05.16</starttime>
+		<endtime>01.11.16</endtime>
+		<from>sw_spo</from>
+		<from>sw_drv_afdx</from>
+		<from>sw_a615</from>
+		<from>sw_a615a</from>
+		<from>sw_drv_mavim</from>
+		<from>sw_ecp</from>
+	</entity>
+	<entity id="sw_vsk">
+		<name>Разработка компонента встроенного контроля</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Куликов Н.В.</people>
+		<starttime>15.05.16</starttime>
+		<endtime>01.11.16</endtime>
+		<from>sw_spo</from>
+	</entity>
+	<entity id="sw_fpo">
+		<name>Интеграция всех компонентов функционального ПО в проект, создание интеграционного проекта</name>
+		<description>Разработка unit-тестов и программного обеспечения</description>
+		<result>Исходный код</result>
+		<people>Куликов Н.В.</people>
+		<starttime>15.08.16</starttime>
+		<endtime>01.11.16</endtime>
+		<from>sw_config</from>
+		<from>sw_autorisation</from>
+		<from>sw_subscription</from>
+		<from>sw_gateway</from>
+		<from>sw_vsk</from>
+	</entity>
+
 
 </root>

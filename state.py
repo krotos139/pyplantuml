@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*- 
 import re
 import random
-import xml.etree.ElementTree as ET
-from xml.parsers import expat
 
 class Stack:
 	def __init__(self):
@@ -53,15 +51,26 @@ class StateDia:
 		self.s = []
 		self.l = []
 		self.stack_parent = Stack()
-		e = Entity("START", "")
-		self.add(e)
-		e = Entity("END", "")
-		self.add(e)
-	def add(self, item):
+		self.entity("START", "")
+		self.entity("END", "")
+	def entity(self, id, name):
+		item = Entity(id, name)
 		item.parrent = self.stack_parent.peek()
 		self.s.append(item)
-	def add_link(self, item):
-		self.l.append(item)
+		return item
+	def link(self, id1, id2):
+		e1 = self.search_name(id1)
+		e2 = self.search_name(id2)
+		if (e1 == None):
+			print "ERROR: not found '%s'" % id1
+			return None
+		if (e2 == None):
+			print "ERROR: not found '%s'" % id2
+			return None
+		l = Link(e1, e2)
+		self.l.append(l)
+		return l
+
 	def search_name(self, id):
 		for d in self.s:
 			if (d.id ==  id):
@@ -69,17 +78,10 @@ class StateDia:
 		return None
 		
 	def push_group(self, item):
-		self.add(item)
 		self.stack_parent.push(item)
 	def pop_group(self):
 		self.stack_parent.pop()
 
-	def link(self, id1, id2):
-		e1 = self.search_name(id1)
-		e2 = self.search_name(id2)
-		l = Link(e1, e2)
-		self.add_link(l)
-		return l
 	def debug_print(self):
 		for d in self.s:
 			print "Entity: "
@@ -124,38 +126,4 @@ class StateDia:
 
 
 
-class StateXMLParser:
-	def __init__(self):
-		self.es = StateDia()
-	
-	def parse(self, filename):
-		xml = ET.parse(filename).getroot()
-
-		entityes = xml.findall("./entity")
-
-		for entity in entityes:
-			print "ENTITY"
-			id = entity.attrib["id"]
-			name = entity.find("name").text
-			e = Entity(id, name)
-			descriptions = entity.findall("./description")
-			for d in descriptions:
-				e.add_desctiption(d.text)
-			self.es.add(e)
-		for entity in entityes:
-			id = entity.attrib["id"]
-			froms = entity.findall("./from")
-			for d in froms:
-				l = self.es.link(d.text, id)
-				l.direction = int(d.attrib.get("direction", "0"))
-			toes = entity.findall("./to")
-			for d in toes:
-				l = self.es.link(id, d.text)
-				l.direction = int(d.attrib.get("direction", "0"))
-
-				
-parser = StateXMLParser()
-parser.parse("state.xml")
-#parser.es.debug_print()
-print parser.es.plantuml()
 
