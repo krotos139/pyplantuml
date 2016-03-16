@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 from xml.parsers import expat
 from state import StateDia
 import datetime
+import gantt
 
 class ProjectParser:
 	def __init__(self, filename):
@@ -26,6 +27,10 @@ class PeopleParser:
 		res["division"] = people.find("division").text
 		res["subdivision"] = people.find("subdivision").text
 		return res
+	def idarray(self):
+		peoples = self.root.findall("./people")
+		for people in peoples:
+			yield people.attrib["id"]
 
 class PlanEntity:
 	def __init__(self):
@@ -218,6 +223,68 @@ class PlanCSVGen:
 		f.write(self.output())
 		f.close()
 
+class GanttGen:
+	def __init__(self, plan, peoples, project):
+		self.es = StateDia()
+		self.plan = plan
+		self.entityes = plan.entityes
+		self.peoples = peoples	
+		self.project = project
+		self.gproject = None
+		self.gen()
+
+	def gen(self):
+		# Change font default
+		gantt.define_font_attributes(fill='black',
+			stroke='black',
+			stroke_width=0,
+			font_family="Verdana")
+
+		self.gproject = gantt.Project(name=self.project.name)
+
+		resources = {}
+		for pid in self.peoples.idarray():
+			resources[pid] = gantt.Resource(pid)
+
+		for entity in self.entityes:
+			resarray = []
+			for people in entity.people:
+				resarray.append(resources[people])
+			
+			task = gantt.Task(name=entity.id,
+				fullname=entity.name,
+		                start=entity.starttime,
+				stop=entity.endtime,
+		                #duration=(entity.endtime - entity.starttime).days,
+                		resources=resarray)
+			self.gproject.add_task(task)
+
+		tasks = self.gproject.get_tasks()
+		for entity in self.entityes:
+			task = None
+			for t in tasks:
+				if t.name == entity.id:
+					task = t
+					break
+			froms = entity.dfrom
+			for d in froms:
+				for t in tasks:
+					if t.name == d.name:
+						task.add_depends([t])
+						break
+		return self.gproject
+	def outtasks(self, filename):
+		self.gproject.make_svg_for_tasks(filename=filename,
+			today=datetime.date.today(),
+			scale=gantt.DRAW_WITH_WEEKLY_SCALE)
+	def outresources(self, filename):
+		self.gproject.make_svg_for_resources(filename=filename,
+			today=datetime.date.today(),
+			scale=gantt.DRAW_WITH_WEEKLY_SCALE)
+	def outcsv(self, filename):
+		self.gproject.csv(filename)
+
+
 project = ProjectParser("project.xml")
 people = PeopleParser("people.xml")
 plan = PlanXMLParser("state.xml")
@@ -226,6 +293,11 @@ state_dia = StateDiaGen(plan)
 #print state_dia.output()
 plancsv = PlanCSVGen(plan, people, project)
 #print plancsv.gen()
+ganttgen = GanttGen(plan, people, project)
 
 state_dia.outfile("out_statedia.txt")
 plancsv.outfile("out_plan.csv")
+ganttgen.outtasks("out_gantt.svg")
+ganttgen.outresources("out_resources.svg")
+ganttgen.outcsv("out_csv.csv")
+
